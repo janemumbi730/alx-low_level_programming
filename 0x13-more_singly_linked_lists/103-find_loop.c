@@ -6,19 +6,21 @@
  *
  * Return: loop starts, or NULL
  */
+
 listint_t *find_listint_loop(listint_t *head)
 {
+	listint_t *slow, *fast;
+
 	if (head == NULL)
 	return (NULL);
 
-	listint_t *slow = head;
-	listint_t *fast = head;
+	slow = head;
+	fast = head;
 
 	while (fast != NULL && fast->next != NULL)
 	{
 	fast = fast->next->next;
 	slow = slow->next;
-
 	if (slow == fast)
 	{
 	slow = head;
