@@ -9,37 +9,38 @@
  */
 int main(int arc, char *arv[])
 {
-	int from, to, file_from;
+	int file_from, file_to, read_file;
 	char buffer[1024];
 
 	if (arc != 3)
 		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n"), exit(97);
 
-	from = open(arv[1], O_RDONLY);
-	if (from == -1)
+	file_from = open(arv[1], O_RDONLY);
+	if (file_from == -1)
 		dprintf(STDERR_FILENO, "Error: Can't read from %s\n", arv[1]), exit(98);
 
-	to = open(arv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	file_to = open(arv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 
 	do {
-		file_from = read(from, buffer, 1024);
-		if (file_from > 0)
+		read_file = read(file_from, buffer, 1024);
+		if (read_file > 0)
 		{
-		if (to < 0 || (write(to, buffer, file_from) != file_from))
+		if (file_to < 0 || (write(file_to, buffer, read_file) != read_file))
 		{
 		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", arv[2]);
 		exit(99);
 		}
 		}
-	} while (file_from > 0);
+	} while (read_file > 0);
 
-	if (file_from == -1)
-		dprintf(STDERR_FILENO, "Error; Can't read from %s\n", arv[1]), exit(98);
-	if ((close(from)) == -1)
-	dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", from),
+	if (read_file == -1)
+	dprintf(STDERR_FILENO, "Error; Can't read from %s\n", arv[1]), exit(98);
+
+	if ((close(file_to)) == -1)
+	dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_to), exit(100);
+
+	if ((close(file_from)) == -1)
+	dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_from),
 	exit(100);
-	if ((close(to)) == -1)
-	dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", to), exit(100);
-
 	return (0);
 }
