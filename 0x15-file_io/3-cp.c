@@ -13,7 +13,7 @@ int main(int arc, char *arv[])
 	char buffer[1024];
 
 	if (arc != 3)
-		dprintf(STDERR_FILENO, "Usage: cp file_from file_to \n"), exit(97);
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n"), exit(97);
 
 	file_from = open(arv[1], O_RDONLY);
 	if (file_from == -1)
