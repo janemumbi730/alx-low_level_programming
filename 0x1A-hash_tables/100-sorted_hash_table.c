@@ -56,7 +56,7 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 	if (new == NULL)
 		return (0);
 
-	add_i_shash(ht, new);
+	ad_shash(ht, new);
 
 	return (1);
 }
@@ -149,29 +149,28 @@ void shash_table_print_rev(const shash_table_t *ht)
 }
 
 /**
- * shash_table_delete - deletes a shash table
- *
- * @ht: pointer to the shash table
- * Return: no return
+ * shash_table_delete - deletes shash table
+ * @ht: shash table
+ * Return: void
  */
 void shash_table_delete(shash_table_t *ht)
 {
-	unsigned long int i;
-	shash_node_t *tmp1;
-	shash_node_t *tmp2;
+	unsigned long int a;
+	shash_node_t *x;
+	shash_node_t *y;
 
 	if (ht == NULL)
 		return;
 
-	for (i = 0; i < ht->size; i++)
+	for (a = 0; a < ht->size; a++)
 	{
-		tmp1 = ht->array[i];
-		while ((tmp2 = tmp1) != NULL)
+		x = ht->array[a];
+		while ((y = x) != NULL)
 		{
-			tmp1 = tmp1->next;
-			free(tmp2->key);
-			free(tmp2->value);
-			free(tmp2);
+			x = x->next;
+			free(y->key);
+			free(y->value);
+			free(y);
 		}
 	}
 	free(ht->array);
@@ -179,88 +178,86 @@ void shash_table_delete(shash_table_t *ht)
 }
 
 /**
- * add_n_shash - adds a node at the beginning of a shash at a given index
- *
- * @h: head of the shash linked list
- * @key: key of the shash
- * @value: value to store
- * Return: created node
+ * add_n_shash - adds a node to beginning of a shash
+ * @h: head of shash linked list
+ * @key: key
+ * @value: value
+ * Return: node
  */
 shash_node_t *add_n_shash(shash_node_t **h, const char *key, const char *value)
 {
-	shash_node_t *tmp;
+	shash_node_t *x;
 
-	tmp = *h;
+	x = *h;
 
-	while (tmp != NULL)
+	while (x != NULL)
 	{
-		if (strcmp(key, tmp->key) == 0)
+		if (strcmp(key, x->key) == 0)
 		{
-			free(tmp->value);
-			tmp->value = strdup(value);
-			return (tmp);
+			free(x->value);
+			x->value = strdup(value);
+			return (x);
 		}
-		tmp = tmp->next;
+		x = x->next;
 	}
 
-	tmp = malloc(sizeof(shash_node_t));
+	x = malloc(sizeof(shash_node_t));
 
-	if (tmp == NULL)
+	if (x == NULL)
 		return (NULL);
 
-	tmp->key = strdup(key);
-	tmp->value = strdup(value);
-	tmp->next = *h;
+	x->key = strdup(key);
+	x->value = strdup(value);
+	x->next = *h;
 
-	*h = tmp;
+	*h = x;
 
-	return (tmp);
+	return (x);
 }
 
 /**
- * add_i_shash - adds a node on the DLL of the shash table
- *
- * @ht: pointer to the table
- * @new: new node to add
- * Return: no return
+ * ad_shash - adds a node of the shash table
+ * @ht: shash table
+ * @new: new node
+ * Return: void
  */
-void add_i_shash(shash_table_t *ht, shash_node_t *new)
+void ad_shash(shash_table_t *ht, shash_node_t *new)
 {
-	shash_node_t *tmp1, *tmp2;
-	int ret;
+	shash_node_t *x, *y;
+	int r;
 
-	tmp1 = tmp2 = ht->shead;
+	x = y = ht->shead;
 
-	while (tmp1 != NULL)
+	while (x != NULL)
 	{
-		ret = strcmp(new->key, tmp1->key);
-		if (ret == 0)
+		r = strcmp(new->key, x->key);
+		if (r == 0)
 		{
 			return;
 		}
-		else if (ret < 0)
+		else if (r < 0)
 		{
-			new->sprev = tmp1->sprev;
+			new->sprev = x->sprev;
 
-			if (tmp1->sprev)
-				tmp1->sprev->snext = new;
+			if (x->sprev)
+				x->sprev->snext = new;
 			else
 				ht->shead = new;
 
-			tmp1->sprev = new;
-			new->snext = tmp1;
+			x->sprev = new;
+			new->snext = x;
 
 			return;
 		}
-		tmp2 = tmp1;
-		tmp1 = tmp1->snext;
+		y = x;
+		x = x->snext;
 	}
 
-	new->sprev = tmp2;
+	new->sprev = y;
 	new->snext = NULL;
 
 	if (ht->shead)
-		tmp2->snext = new;
+		y->snext = new;
 	else
 		ht->shead = new;
 
