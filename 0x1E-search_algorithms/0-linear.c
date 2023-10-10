@@ -1,4 +1,5 @@
 #include "search_algos.h"
+#include <stdio.h>
 /**
  * linear_search - search linearly
  * @array:  parameter to given array
@@ -6,21 +7,19 @@
  * @value: value searched
  * Return: index
  */
-
 int linear_search(int *array, size_t size, int value)
 {
-	size_t x;
+	size_t i;
 
-	if (!array)
+	if (array == NULL)
 		return (-1);
 
-	x = 0;
-	while (x < size)
+	for (i = 0; i < size; i++)
 	{
-		printf("Value checked array[%lu] = [%d]\n", x, array[x]);
-		if (array[x] == value)
-			return (x);
-		x++;
+		printf("Value checked array[%lu] = [%d]\n", i, array[i]);
+		if (array[i] == value)
+		return (i);
 	}
+
 	return (-1);
 }
