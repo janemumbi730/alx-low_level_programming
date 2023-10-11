@@ -1,34 +1,42 @@
+#include <stdio.h>
 #include "search_algos.h"
 
 /**
- * binary_search - helper func to print array everytime array is halved
- * @array: array
- * @size: left index of original array
- * @value: right index of original array
- * Return - the index where value is located
+ * binary_search - search mids
+ * @array: given array of ints
+ * @size: size of array
+ * @value: value to search for
+ * Return: index at which value's found
  */
 
 int binary_search(int *array, size_t size, int value)
 {
-	size_t i, left, right;
+	int left = 0;
+	int right = size - 1;
+	int i;
 
 	if (array == NULL)
 		return (-1);
 
-	for (left = 0, right = size - 1; right >= left;)
+	while (left <= right)
 	{
-		printf("Searching in array: ");
-		for (i = left; i < right; i++)
-			printf("%d, ", array[i]);
-		printf("%d\n", array[i]);
+		int mid = (left + right) / 2;
 
-		i = left + (right - left) / 2;
-		if (array[i] == value)
-			return (i);
-		if (array[i] > value)
-			right = i - 1;
+		printf("Searching in array: ");
+		for (i = left; i <= right; i++)
+		{
+		if (i != right)
+			printf("%d, ", array[i]);
 		else
-			left = i + 1;
+			printf("%d\n", array[i]);
+		}
+
+		if (array[mid] == value)
+		return (mid);
+		else if (array[mid] < value)
+		left = mid + 1;
+		else
+		right = mid - 1;
 	}
 
 	return (-1);
